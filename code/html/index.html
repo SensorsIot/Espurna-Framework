@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <title>ESPurna 0.0.0</title>
+        <meta charset="utf-8" />
+        <!-- shortcut::html/favicon.ico -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- build:css style.css -->
+        <link rel="stylesheet" href="pure-min.css" />
+        <link rel="stylesheet" href="side-menu.css" />
+        <link rel="stylesheet" href="grids-responsive-min.css" />
+        <link rel="stylesheet" href="checkboxes.css" />
+        <link rel="stylesheet" href="custom.css" />
+        <link rel="stylesheet" href="wheelcolorpicker.css" />
+        <!-- endbuild -->
+
+    </head>
+
+    <body>
+
+        <div id="credentials" class="webmode">
+            Wrong credentials
+        </div>
+
+        <div id="password" class="webmode">
+
+            <div class="content">
+
+                <form id="formPassword" class="pure-form" action="/" method="post">
+
+                    <input class="pure-u-1 pure-u-sm-3-4" type="hidden" name="webMode" value="1" />
+
+                    <div class="panel" style="display: block;">
+
+                        <div class="header">
+                            <h1>SECURITY</h1>
+                            <h2>Before using this device you have to change the default password for the user 'admin'. This password will be used for the <strong>AP mode hotspot</strong>, the <strong>web interface</strong> (where you are now) and the <strong>over-the-air updates</strong>.</h2>
+                        </div>
+
+                        <div class="page">
+
+                            <fieldset>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="adminPass1">Admin password</label>
+                                    <input name="adminPass1" class="pure-u-1 pure-u-md-3-4" type="password" tabindex="1" />
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">
+                                        The administrator password is used to access this web interface (user 'admin'), but also to connect to the device when in AP mode or to flash a new firmware over-the-air (OTA).<br />
+                                        It should have at least <strong>eight characters</strong> (letters, numbers or the underscore) and at least <strong>one number</strong>, <strong>one lowercase</strong> and <strong>one uppercase</strong> letter.</div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="adminPass2">Admin password (repeat)</label>
+                                    <input name="adminPass2" class="pure-u-1 pure-u-md-3-4" type="password" tabindex="2" />
+                                </div>
+
+                                <button class="pure-button button-update-password">Update</button>
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div> <!-- content -->
+
+        </div>
+
+        <div id="layout" class="webmode">
+
+            <a href="#menu" id="menuLink" class="menu-link">
+                <span></span>
+            </a>
+
+            <div id="menu">
+                <div class="pure-menu">
+
+                    <span class="pure-menu-heading">ESPurna 0.0.0</span>
+
+                    <ul class="pure-menu-list">
+
+                        <li class="pure-menu-item">
+                            <a href="#" class="pure-menu-link" data="panel-status">STATUS</a>
+                        </li>
+
+                        <li class="pure-menu-item">
+                            <a href="#" class="pure-menu-link" data="panel-general">GENERAL</a>
+                        </li>
+
+                        <li class="pure-menu-item">
+                            <a href="#" class="pure-menu-link" data="panel-security">SECURITY</a>
+                        </li>
+
+                        <li class="pure-menu-item">
+                            <a href="#" class="pure-menu-link" data="panel-wifi">WIFI</a>
+                        </li>
+
+                        <li class="pure-menu-item">
+                            <a href="#" class="pure-menu-link" data="panel-mqtt">MQTT</a>
+                        </li>
+
+                        <li class="pure-menu-item module module-dcz">
+                            <a href="#" class="pure-menu-link" data="panel-domoticz">DOMOTICZ</a>
+                        </li>
+
+                        <li class="pure-menu-item module module-pow">
+                            <a href="#" class="pure-menu-link" data="panel-power">POWER</a>
+                        </li>
+
+                    </ul>
+
+                    <div class="main-buttons">
+                        <button class="pure-button button-update">Update</button>
+                        <button class="pure-button button-reconnect">Reconnect</button>
+                        <button class="pure-button button-reset">Reset</button>
+                    </div>
+
+                    <div class="footer">
+                        &copy; 2016-2017<br />
+                        Xose Pérez<br/>
+                        <a href="http://tinkerman.cat" target="_blank">http://tinkerman.cat</a><br/>
+                        <a href="https://bitbucket.org/xoseperez/espurna" target="_blank">ESPurna @ Bitbucket</a><br/>
+                        GPLv3 license<br/>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="content">
+
+                <div class="panel" id="panel-status" style="display: block;">
+
+                    <div class="header">
+                        <h1>STATUS</h1>
+                        <h2>Current configuration</h2>
+                    </div>
+
+                    <div class="page">
+
+                        <form class="pure-form pure-form-aligned">
+                            <fieldset>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="manufacturer">Manufacturer</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="manufacturer" readonly />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="device">Device</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="device" readonly />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="chipid">Chip ID</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="chipid" readonly />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="mac">MAC</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="mac" readonly />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="network">Network</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="network" readonly />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="deviceip">IP</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="deviceip" readonly />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="mqtt">MQTT Status</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="mqttStatus" readonly />
+                                </div>
+
+                                <div class="pure-g module module-ds">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="dsTmp">Temperature (<span id="tmpUnit"></span>)</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="dsTmp" readonly />
+                                </div>
+
+                                <div class="pure-g module module-dht">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="dhtTmp">Temperature (<span id="tmpUnit"></span>)</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="dhtTmp" readonly />
+                                </div>
+
+                                <div class="pure-g module module-dht">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="dhtHum">Humidity (%)</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="dhtHum" readonly />
+                                </div>
+
+                                <div class="pure-g module module-pow">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="powActivePower">Active Power (W)</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="powActivePower" readonly />
+                                </div>
+
+                                <div class="pure-g module module-pow module-emon">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="powApparentPower">Apparent Power (W)</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="powApparentPower" readonly />
+                                </div>
+
+                                <div class="pure-g module module-pow">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="powReactivePower">Reactive Power (W)</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="powReactivePower" readonly />
+                                </div>
+
+                                <div class="pure-g module module-pow">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="powCurrent">Current (A)</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="powCurrent" readonly />
+                                </div>
+
+                                <div class="pure-g module module-pow">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="powVoltage">Voltage (V)</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="powVoltage" readonly />
+                                </div>
+
+                                <div class="pure-g module module-pow">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="powPowerFactor">Power Factor (%)</label>
+                                    <input class="pure-u-1 pure-u-sm-3-4" type="text" name="powPowerFactor" readonly />
+                                </div>
+
+                                <div id="relays">
+                                </div>
+
+                                <div class="pure-g module module-color">
+                                    <label class="pure-u-1 pure-u-sm-1-4">Color</label>
+                                    <input class="pure-u-1 pure-u-sm-1-4" data-wcp-layout="block" name="color" readonly />
+                                </div>
+
+                            </fieldset>
+
+                        </form>
+                    </div>
+                </div>
+
+                <form id="formSave" class="pure-form" action="/" method="post">
+
+                    <input class="pure-u-1 pure-u-sm-3-4" type="hidden" name="webMode" value="0" />
+
+                    <div class="panel" id="panel-general">
+
+                        <div class="header">
+                            <h1>GENERAL</h1>
+                            <h2>General configuration values</h2>
+                        </div>
+
+                        <div class="page">
+
+                            <fieldset>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="hostname">Hostname</label>
+                                    <input name="hostname" class="pure-u-1 pure-u-md-3-4" type="text" tabindex="1" />
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">This name will identify this device in your network (http://&lt;hostname&gt;.local). For this setting to take effect you should restart the wifi interface clicking the "Reconnect" button.</div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="relayMode">Switch boot mode</label>
+                                    <div class="pure-u-1 pure-u-md-3-4">
+                                        <select name="relayMode" class="pure-u-3-4" tabindex="2">
+                                            <option value="0">Always OFF</a>
+                                            <option value="1">Always ON</a>
+                                            <option value="2">Same as before</a>
+                                            <option value="3">Toogle before</a>
+                                        </select>
+                                    </div>
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">Here you can define what will be the status of the switch after a reboot.</div>
+                                </div>
+
+                                <div class="pure-g module module-multirelay">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="relaySync">Switch sync mode</label>
+                                    <div class="pure-u-1 pure-u-md-3-4">
+                                        <select name="relaySync" class="pure-u-3-4" tabindex="3">
+                                            <option value="0">No synchonisation</a>
+                                            <option value="1">Zero or one switches active</a>
+                                            <option value="2">One and just one switches active</a>
+                                            <option value="3">All synchonised</a>
+                                        </select>
+                                    </div>
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">Define how the different switches should be synchronized.</div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="relayPulseMode">Switch pulse mode</label>
+                                    <div class="pure-u-1 pure-u-md-3-4">
+                                        <select name="relayPulseMode" class="pure-u-3-4" tabindex="4">
+                                            <option value="0">Don't pulse</a>
+                                            <option value="1">Normally OFF (stays on for a short time)</a>
+                                            <option value="2">Normally ON (stays off for a short time)</a>
+                                        </select>
+                                    </div>
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">When pulse mode is enabled the switch will automatically switch back to its normal state after the pulse time (below).</div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="relayPulseTime">Switch pulse time</label>
+                                    <input name="relayPulseTime" class="pure-u-1 pure-u-md-3-4" type="number" min="1" tabindex="5" />
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">Pulse time in seconds.</div>
+                                </div>
+
+                                <div class="pure-g module module-fauxmo">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="fauxmoEnabled">Alexa integration</label>
+                                    <div class="pure-u-1 pure-u-sm-1-4"><input type="checkbox" name="fauxmoEnabled" tabindex="6" /></div>
+                                </div>
+
+                                <div class="pure-g module module-ds module-dht">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="tmpUnits">Temperature units</label>
+                                    <div class="pure-u-1 pure-u-sm-1-4"><input type="radio" name="tmpUnits" tabindex="7" value="0"> Celsius (ºC)</input></div>
+                                    <div class="pure-u-1 pure-u-sm-1-4"><input type="radio" name="tmpUnits" tabindex="8" value="1"> Fahrenheit (ºF)</input></div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-sm-1-4">Settings</label>
+                                    <div class="pure-u-1 pure-u-sm-1-8"><button class="pure-button button-settings-backup pure-u-23-24">Backup</button></div>
+                                    <div class="pure-u-1 pure-u-sm-1-8"><button class="pure-button button-settings-restore pure-u-23-24">Restore</button></div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="panel" id="panel-security">
+
+                        <div class="header">
+                            <h1>SECURITY</h1>
+                            <h2>Device security settings</h2>
+                        </div>
+
+                        <div class="page">
+
+                            <fieldset>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="adminPass1">Admin password</label>
+                                    <input name="adminPass1" class="pure-u-1 pure-u-md-3-4" type="password" tabindex="11" />
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">
+                                        The administrator password is used to access this web interface (user 'admin'), but also to connect to the device when in AP mode or to flash a new firmware over-the-air (OTA).<br />
+                                        It should have at least <strong>eight characters</strong> (letters, numbers or the underscore) and at least <strong>one number</strong>, <strong>one lowercase</strong> and <strong>one uppercase</strong> letter.</div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="adminPass2">Admin password (repeat)</label>
+                                    <input name="adminPass2" class="pure-u-1 pure-u-md-3-4" type="password" tabindex="12" />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="webPort">HTTP port</label>
+                                    <input name="webPort" class="pure-u-1 pure-u-md-3-4" type="text" tabindex="13" />
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">
+                                        This is the port for the web interface and API requests.<br />
+                                        If different than 80 (standard HTTP port) you will have to add it explicitly to your requests: http://myip:myport/
+                                    </div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <div class="pure-u-1 pure-u-sm-1-4"><label for="apiEnabled">Enable HTTP API</label></div>
+                                    <div class="pure-u-1 pure-u-sm-1-4"><input type="checkbox" name="apiEnabled" /></div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="apiKey">HTTP API Key</label>
+                                    <input name="apiKey" class="pure-u-3-4 pure-u-md-1-2" type="text" tabindex="14" />
+                                    <div class=" pure-u-1-4 pure-u-md-1-4"><button class="pure-button button-apikey pure-u-23-24">Generate</button></div>
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">
+                                        This is the key you will have to pass with every HTTP request to the API, either to get or write values.<br />
+                                        All API calls must contain the <strong>apikey</strong> parameter with the value above.<br />
+                                        To know what APIs are enabled do a call to <strong>/apis</strong>.
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="panel" id="panel-wifi">
+
+                        <div class="header">
+                            <h1>WIFI</h1>
+                            <h2>You can configure up to 5 different WiFi networks. The device will try to connect in order of signal strength.</h2>
+                        </div>
+
+                        <div class="page">
+
+                            <fieldset>
+
+                                <div id="networks">
+                                </div>
+
+                                <button type="button" class="pure-button button-add-network">Add network</button>
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="panel" id="panel-mqtt">
+
+                        <div class="header">
+                            <h1>MQTT</h1>
+                            <h2>Configure an <strong>MQTT broker</strong> in your network and you will be able to change the switch status via an MQTT message. Leave the server field empty to disable MQTT.</h2>
+                        </div>
+
+                        <div class="page">
+
+                            <fieldset>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="mqttServer">MQTT Server</label>
+                                    <input class="pure-u-1 pure-u-md-3-4" name="mqttServer" type="text" size="20" tabindex="21" placeholder="IP or address of your broker" />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="mqttPort">MQTT Port</label>
+                                    <input class="pure-u-1 pure-u-md-3-4" name="mqttPort" type="text" size="6" tabindex="22" value="1883" />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="mqttUser">MQTT User</label>
+                                    <input class="pure-u-1 pure-u-md-3-4" name="mqttUser" type="text" size="20" tabindex="23" placeholder="Leave blank if no user/pass" />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="mqttPassword">MQTT Password</label>
+                                    <input class="pure-u-1 pure-u-md-3-4" name="mqttPassword" type="text" size="20" tabindex="24" placeholder="Leave blank if no user/pass" />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="mqttTopic">MQTT Root Topic</label>
+                                    <input class="pure-u-1 pure-u-md-3-4" name="mqttTopic" type="text" size="20" tabindex="25" />
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">
+                                        This is the root topic for this device. The {identifier} placeholder will be replaces by the device hostname.<br />
+                                        - <strong>&lt;root&gt;/relay/#</strong> Send a 0 or a 1 as a payload to this topic to switch it on or off. You can also send a 2 to toggle its current state. Replace # with the switch ID (starting from 0). If the board has only one switch it will be 0.<br />
+                                        - <strong>&lt;root&gt;/led/#</strong> Send a 0 or a 1 as a payload to this topic to set the onboard LED to the given state, send a 3 to turn it back to WIFI indicator. Replace # with the LED ID (starting from 0). If the board has only one LED it will be 0.<br />
+                                        - <strong>&lt;root&gt;/button/#</strong> For each button in the board subscribe to this topic to know when it is pressed (payload 1) or released (payload 0).<br />
+                                        - <strong>&lt;root&gt;/ip</strong> The device will report to this topic its IP.<br />
+                                        - <strong>&lt;root&gt;/version</strong> The device will report to this topic its firmware version on boot.<br />
+                                        - <strong>&lt;root&gt;/status</strong> The device will report a 1 to this topic every few minutes. Upon MQTT disconnecting this will be set to 0.
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+                    </div>
+
+                    <div class="panel" id="panel-domoticz">
+
+                        <div class="header">
+                            <h1>DOMOTICZ</h1>
+                            <h2>
+                                Configure the connection to your Domoticz server.
+                            </h2>
+                        </div>
+
+                        <div class="page">
+
+                            <fieldset>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="dczTopicIn">Domoticz IN Topic</label>
+                                    <input class="pure-u-1 pure-u-md-3-4" name="dczTopicIn" type="text" tabindex="31" />
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="dczTopicOut">Domoticz OUT Topic</label>
+                                    <input class="pure-u-1 pure-u-md-3-4" name="dczTopicOut" type="text" tabindex="32" />
+                                </div>
+
+                                <div class="pure-g module module-dht module-ds">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="dczTmpIdx">Temperature IDX</label>
+                                    <div class="pure-u-1 pure-u-sm-1-8"><input class="pure-u-sm-23-24" name="dczTmpIdx" type="number" min="0" tabindex="33" data="0" /></div>
+                                    <div class="pure-u-1 pure-u-sm-5-8 hint center">Set to 0 to disable notifications.</div>
+                                </div>
+
+                                <div class="pure-g module module-dht">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="dczHumIdx">Humidity IDX</label>
+                                    <div class="pure-u-1 pure-u-sm-1-8"><input class="pure-u-sm-23-24" name="dczHumIdx" type="number" min="0" tabindex="34" data="0" /></div>
+                                    <div class="pure-u-1 pure-u-sm-5-8 hint center">Set to 0 to disable notifications.</div>
+                                </div>
+
+                                <div class="pure-g module module-pow module-emon">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="dczPowIdx">Power IDX</label>
+                                    <div class="pure-u-1 pure-u-sm-1-8"><input class="pure-u-sm-23-24" name="dczPowIdx" type="number" min="0" tabindex="35" data="0" /></div>
+                                    <div class="pure-u-1 pure-u-sm-5-8 hint center">Set to 0 to disable notifications.</div>
+                                </div>
+
+                                <div class="pure-g module module-pow module-emon">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="dczEnergyIdx">Energy increment IDX</label>
+                                    <div class="pure-u-1 pure-u-sm-1-8"><input class="pure-u-sm-23-24" name="dczEnergyIdx" type="number" min="0" tabindex="36" data="0" /></div>
+                                    <div class="pure-u-1 pure-u-sm-5-8 hint center">Set to 0 to disable notifications.</div>
+                                </div>
+
+                                <div class="pure-g module module-pow">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="dczVoltIdx">Voltage IDX</label>
+                                    <div class="pure-u-1 pure-u-sm-1-8"><input class="pure-u-sm-23-24" name="dczVoltIdx" type="number" min="0" tabindex="37" data="0" /></div>
+                                    <div class="pure-u-1 pure-u-sm-5-8 hint center">Set to 0 to disable notifications.</div>
+                                </div>
+
+                                <div class="pure-g module module-pow module-emon">
+                                    <label class="pure-u-1 pure-u-sm-1-4" for="dczCurrentIdx">Current IDX</label>
+                                    <div class="pure-u-1 pure-u-sm-1-8"><input class="pure-u-sm-23-24" name="dczCurrentIdx" type="number" min="0" tabindex="38" data="0" /></div>
+                                    <div class="pure-u-1 pure-u-sm-5-8 hint center">Set to 0 to disable notifications.</div>
+                                </div>
+
+                                <div id="idxs">
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+                    </div>
+
+                    <div class="panel" id="panel-power">
+
+                        <div class="header">
+                            <h1>POWER</h1>
+                            <h2>
+                                Calibrate your power monitor device. Use a pure resistive load and introduce the expected values for active power, current and voltage. Use the nominal values or a multimeter to get the proper numbers. Set any field to 0 to leave the calibration value untouched.
+                            </h2>
+                        </div>
+
+                        <div class="page">
+
+                            <fieldset>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="powExpectedPower">AC RMS Active Power</label>
+                                    <input class="pure-u-1 pure-u-md-3-4 powExpected" name="powExpectedPower" type="text" size="8" tabindex="51" placeholder="0" />
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">In Watts (W). If you are using a pure resistive load like a bulb this will be writen on it, otherwise use a socket multimeter to get this value.</div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="powExpectedVoltage">AC RMS Voltage</label>
+                                    <input class="pure-u-1 pure-u-md-3-4 powExpected" name="powExpectedVoltage" type="text" size="8" tabindex="52" placeholder="0" />
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">In Volts (V). Enter your the nominal AC voltage for your household or facility, or use multimeter to get this value.</div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <label class="pure-u-1 pure-u-md-1-4" for="powExpectedCurrent">AC RMS Current</label>
+                                    <input class="pure-u-1 pure-u-md-3-4 powExpected" name="powExpectedCurrent" type="text" size="8" tabindex="55" placeholder="0" />
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">In Ampers (A). If you are using a pure resistive load like a bulb this will the ratio between the two previous values, i.e. power / voltage. You can also use a current clamp around one fo the power wires to get this value.</div>
+                                </div>
+
+                                <div class="pure-g">
+                                    <div class="pure-u-1 pure-u-sm-1-4"><label for="powExpectedReset">Reset calibration</label></div>
+                                    <div class="pure-u-1 pure-u-sm-1-4"><input type="checkbox" name="powExpectedReset" /></div>
+                                    <div class="pure-u-0 pure-u-md-1-4">&nbsp;</div>
+                                    <div class="pure-u-1 pure-u-md-3-4 hint">Move this switch to ON and press "Update" to revert to factory values.</div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div> <!-- content -->
+
+        </div> <!-- layout -->
+
+        <!-- Templates -->
+
+        <div id="networkTemplate" class="template">
+
+            <div class="pure-g">
+
+                <label class="pure-u-md-1-6 pure-u-1-4" for="ssid">Network SSID</label>
+                <div class="pure-u-md-3-4 pure-u-5-8"><input name="ssid" type="text" class="pure-u-23-24" value="" size="8" tabindex="0" placeholder="Network SSID" required /></div>
+                <div class="pure-u-md-1-12 pure-u-1-8"><button type="button" class="pure-button button-more-network pure-u-1">...</button></div>
+
+                <div class="more">
+
+                    <div class="break"></div>
+
+                    <label class="pure-u-md-1-6 pure-u-1-4" for="pass">Password</label>
+                    <input class="pure-u-md-5-6 pure-u-3-4" name="pass" type="password" value="" tabindex="0" />
+
+                    <div class="break"></div>
+
+                    <label class="pure-u-md-1-6 pure-u-1-4" for="ip">Static IP</label>
+                    <input class="pure-u-md-5-6 pure-u-3-4" name="ip" type="text" value="" size="15" tabindex="0" />
+                    <div class="pure-u-md-1-6 pure-u-1-4"></div>
+                    <div class="pure-u-md-5-6 pure-u-3-4 hint">Leave empty for DNS negotiation</div>
+
+                    <label class="pure-u-md-1-6 pure-u-1-4" for="gw">Gateway IP</label>
+                    <input class="pure-u-md-5-6 pure-u-3-4" name="gw" type="text" value="" size="15" tabindex="0" />
+                    <div class="pure-u-md-1-6 pure-u-1-4"></div>
+                    <div class="pure-u-md-5-6 pure-u-3-4 hint">Set when using a static IP</div>
+
+                    <label class="pure-u-md-1-6 pure-u-1-4" for="mask">Network Mask</label>
+                    <input class="pure-u-md-5-6 pure-u-3-4" name="mask" type="text" value="255.255.255.0" size="15" tabindex="0" />
+                    <div class="pure-u-md-1-6 pure-u-1-4"></div>
+                    <div class="pure-u-md-5-6 pure-u-3-4 hint">Usually 255.255.255.0 for /24 networks</div>
+
+                    <label class="pure-u-md-1-6 pure-u-1-4" for="dns">DNS IP</label>
+                    <input class="pure-u-md-5-6 pure-u-3-4" name="dns" type="text" value="8.8.8.8" size="15" tabindex="0" />
+                    <div class="pure-u-md-1-6 pure-u-1-4"></div>
+                    <div class="pure-u-md-5-6 pure-u-3-4 hint">Set the Domain Name Server IP to use when using a static IP</div>
+
+                    <div class="pure-u-md-1-6 pure-u-1-4"></div>
+                    <div class="pure-u-md-1-6 pure-u-1-4"><button type="button" class="pure-button button-del-network pure-u-5-6 pure-u-md-5-6">Del</button></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="relayTemplate" class="template">
+            <div class="pure-g">
+                <label class="pure-u-1 pure-u-sm-1-4">Switch<span class="relay_id"></span> Status</label>
+                <div class="pure-u-1 pure-u-sm-1-4"><input type="checkbox" class="relayStatus" data="0" /></div>
+            </div>
+        </div>
+
+        <div id="idxTemplate" class="template">
+            <div class="pure-g">
+                <label class="pure-u-1 pure-u-sm-1-4" for="dczRelayIdx">Switch<span class="id"></span> IDX</label>
+                <div class="pure-u-1 pure-u-sm-1-8"><input class="pure-u-sm-23-24 dczRelayIdx" name="dczRelayIdx" type="number" min="0" tabindex="0" data="0" /></div>
+                <div class="pure-u-1 pure-u-sm-5-8 hint center">Set to 0 to disable notifications.</div>
+            </div>
+        </div>
+
+        <iframe id="downloader" style="display:none;"></iframe>
+        <input id="uploader" type="file" style="display:none;" />
+
+    </body>
+
+    <!-- build:js script.js -->
+    <script src="jquery-1.12.3.min.js"></script>
+    <script src="checkboxes.js"></script>
+    <script src="custom.js"></script>
+    <script src="jquery.wheelcolorpicker-3.0.2.min.js"></script>
+    <!-- endbuild -->
+
+</html>
