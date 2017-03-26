@@ -1,3 +1,5 @@
+This is a fork of Xose's Library. I just added iotappStory compatibility.
+
 # ESPurna Firmware
 
 ESPurna ("spark" in Catalan) is a custom firmware for ESP8266 based smart switches.
