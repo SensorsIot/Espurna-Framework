@@ -1,4 +1,4 @@
-This is a fork of Xose's Library. I just added iotappStory compatibility.
+This is a fork of Xose's Library. I just added IOTappStory compatibility.
 
 # ESPurna Firmware
 
