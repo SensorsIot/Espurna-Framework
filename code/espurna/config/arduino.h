@@ -56,7 +56,7 @@
 //#define ENABLE_EMON           1
 //#define ENABLE_HLW8018        1
 //#define ENABLE_RF             0
-#define ENABLE_FAUXMO           1
+//#define ENABLE_FAUXMO           1
 //#define ENABLE_NOFUSS         0
 //#define ENABLE_DOMOTICZ       0
-#define ENABLE_IOTAPPSTORY	1
+//#define ENABLE_IOTAPPSTORY	1
