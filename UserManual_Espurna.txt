@@ -1,0 +1,88 @@
+
+/21stHome/switch/{identifier}
+
+This is the root topic for this device. A trailing slash will be added if not preset. The {identifier} placeholder will be replaces by the device hostname.
+
+- <root/>relay/# 
+
+Send a 0 or a 1 as a payload to this topic to switch it on or off. You can also send a 2 to toggle its current state. 
+Replace # with the switch ID (starting from 0). If the board has only one switch it will be 0.
+
+- <root/>led/# 
+Send a 0 or a 1 as a payload to this topic to set the onboard LED to the given state, send a 3 to turn it back to WIFI indicator. 
+Replace # with the LED ID (starting from 0). If the board has only one LED it will be 0.
+
+- <root/>button/# 
+For each button in the board subscribe to this topic to know when it is pressed (payload 1) or released (payload 0).
+
+- <root/>status The device will report a 1 to this topic every few minutes. Upon MQTT disconnecting this will be set to 0.
+
+- Other values reported (depending on the build) are: firmware and version, hostname, IP, MAC, signal strenth (RSSI), uptime (in seconds), free heap and power supply.
+
+
+#elif defined(SONOFF_TH)
+
+    #define MANUFACTURER        "ITEAD"
+    #define DEVICE              "SONOFF_TH"
+    #define BUTTON1_PIN         0
+    #define BUTTON1_RELAY       1
+    #define BUTTON1_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH
+    #define RELAY1_PIN          12
+    #define RELAY1_PIN_INVERSE  0
+    #define LED1_PIN            13
+    #define LED1_PIN_INVERSE    1
+
+
+ChipID: 85B0E4
+CPU frequency: 80 MHz
+Last reset reason: Power on
+Memory size (SDK): 1048576 bytes
+Memory size (CHIP): 1048576 bytes
+Free heap: 34368 bytes
+Firmware size: 441360 bytes
+Free firmware space: 520192 bytes
+
+
+[SETTINGS] EEPROM size: 4096 bytes
+[SETTINGS] Settings size: 129 bytes
+[WEBSERVER] Webserver running on port 80
+[RELAY] Number of relays: 1
+[BUTTON] Number of buttons: 1
+[LED] Number of leds: 1
+[LED] Led auto indicator is ON
+[MAIN] Time: Time not set
+[MAIN] Uptime: 80 seconds
+[MAIN] Free heap: 29568 bytes
+[MAIN] Power: 3056 mV
+[WIFI] Creating access point
+[WIFI] MODE AP --------------------------------------
+[WIFI] SSID SONOFF_TOUCH_85B0E4
+[WIFI] PASS fibonacci
+[WIFI] IP   192.168.4.1
+[WIFI] MAC  62:01:94:85:B0:E4
+[WIFI] ----------------------------------------------
+[MDNS] OK
+
+
+Manufacturer: ITEAD
+Device: SONOFF_TOUCH
+Chip ID:85B0E4
+MAC: 60:01:94:85:B0:E4
+Network:SONOFF_TOUCH_85B0E4
+IP:192.168.4.1
+ESPurna Version:1.8.1
+ESPurna BuildJul 13 2017 23:32:21
+MQTT Status:NOT CONNECTED
+NTP Status:NOT SYNC'D
+
+HOSTNAME:SONOFF_TOUCH_85B0E4
+
+/21stHome/switch/{identifier}
+
+/21stHome/switch/SONOFF_TOUCH_85B0E4/status
+
+#Status (1/0)
+/21stHome/switch/SONOFF_TOUCH_04750D/status
+
+#LED control
+/21stHome/switch/SONOFF_TOUCH_04750D/led/0 -m 1

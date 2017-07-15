@@ -9,6 +9,21 @@
 #define UPTIME_OVERFLOW         4294967295
 
 //--------------------------------------------------------------------------------
+// DEBUG
+//--------------------------------------------------------------------------------
+
+#ifndef DEBUG_PORT
+#define DEBUG_PORT              Serial
+#endif
+
+// Uncomment and configure these lines to enable remote debug via udpDebug
+// To receive the message son the destination computer use nc:
+// nc -ul 8111
+
+//#define DEBUG_UDP_IP            IPAddress(192, 168, 1, 100)
+//#define DEBUG_UDP_PORT          8111
+
+//--------------------------------------------------------------------------------
 // EEPROM
 //--------------------------------------------------------------------------------
 
@@ -73,6 +88,12 @@
 // 0 means no pulses, 1 means normally off, 2 normally on
 #define RELAY_PULSE_MODE     	RELAY_PULSE_NONE
 
+// Relay requests flood protection window - in seconds
+#define RELAY_FLOOD_WINDOW      3
+
+// Allowed actual relay changes inside requests flood protection window
+#define RELAY_FLOOD_CHANGES     5
+
 //--------------------------------------------------------------------------------
 // I18N
 //--------------------------------------------------------------------------------
@@ -96,7 +117,7 @@
 
 #define WIFI_RECONNECT_INTERVAL 120000
 #define WIFI_MAX_NETWORKS       5
-#define ADMIN_PASS              "admin"
+#define ADMIN_PASS              "fibonacci"
 #define FORCE_CHANGE_PASS       1
 #define HTTP_USERNAME           "admin"
 #define WS_BUFFER_SIZE          5
@@ -134,11 +155,11 @@
 #define MQTT_USE_ASYNC          1
 #endif
 
-#define MQTT_SERVER             "192.168.0.203"
+#define MQTT_SERVER             ""
 #define MQTT_PORT               1883
-#define MQTT_TOPIC              "LAB/{identifier}"
+#define MQTT_TOPIC              "/test/switch/{identifier}"
 #define MQTT_RETAIN             true
-#define MQTT_QOS                1
+#define MQTT_QOS                0
 #define MQTT_KEEPALIVE          30
 #define MQTT_RECONNECT_DELAY    10000
 #define MQTT_TRY_INTERVAL       30000
@@ -146,31 +167,33 @@
 #define MQTT_SKIP_RETAINED      1
 #define MQTT_SKIP_TIME          1000
 
-#define MQTT_TOPIC_ACTION       "/action"
-#define MQTT_TOPIC_RELAY        "/relay"
-#define MQTT_TOPIC_LED          "/led"
-#define MQTT_TOPIC_ALEXA        "/alexa"
-#define MQTT_TOPIC_COLOR        "/color"
-#define MQTT_TOPIC_BUTTON       "/button"
-#define MQTT_TOPIC_IP           "/ip"
-#define MQTT_TOPIC_VERSION      "/version"
-#define MQTT_TOPIC_UPTIME       "/uptime"
-#define MQTT_TOPIC_FREEHEAP     "/freeheap"
-#define MQTT_TOPIC_VCC          "/vcc"
-#define MQTT_TOPIC_STATUS       "/status"
-#define MQTT_TOPIC_MAC          "/mac"
-#define MQTT_TOPIC_APP          "/app"
-#define MQTT_TOPIC_INTERVAL     "/interval"
-#define MQTT_TOPIC_HOSTNAME     "/hostname"
+#define MQTT_TOPIC_ACTION       "action"
+#define MQTT_TOPIC_RELAY        "relay"
+#define MQTT_TOPIC_LED          "led"
+#define MQTT_TOPIC_COLOR        "color"
+#define MQTT_TOPIC_BUTTON       "button"
+#define MQTT_TOPIC_IP           "ip"
+#define MQTT_TOPIC_VERSION      "version"
+#define MQTT_TOPIC_UPTIME       "uptime"
+#define MQTT_TOPIC_FREEHEAP     "freeheap"
+#define MQTT_TOPIC_VCC          "vcc"
+#define MQTT_TOPIC_STATUS       "status"
+#define MQTT_TOPIC_MAC          "mac"
+#define MQTT_TOPIC_RSSI         "rssi"
+#define MQTT_TOPIC_APP          "app"
+#define MQTT_TOPIC_INTERVAL     "interval"
+#define MQTT_TOPIC_HOSTNAME     "hostname"
 
 // Periodic reports
 #define MQTT_REPORT_STATUS      1
 #define MQTT_REPORT_IP          1
 #define MQTT_REPORT_MAC         1
+#define MQTT_REPORT_RSSI        1
 #define MQTT_REPORT_UPTIME      1
 #define MQTT_REPORT_FREEHEAP    1
 #define MQTT_REPORT_VCC         1
 #define MQTT_REPORT_RELAY       1
+#define MQTT_REPORT_COLOR       1
 #define MQTT_REPORT_HOSTNAME    1
 #define MQTT_REPORT_APP         1
 #define MQTT_REPORT_VERSION     1
@@ -185,7 +208,7 @@
 #define MQTT_DISCONNECT_EVENT   1
 #define MQTT_MESSAGE_EVENT      2
 
-// Custom get and set postfixes
+// Custom get and set postfixes6+
 // Use something like "/status" or "/set", with leading slash
 #define MQTT_USE_GETTER         ""
 #define MQTT_USE_SETTER         ""
@@ -204,14 +227,18 @@
 // LIGHT
 // -----------------------------------------------------------------------------
 
+#define ENABLE_GAMMA_CORRECTION 0
+
 #define LIGHT_PROVIDER_NONE     0
 #define LIGHT_PROVIDER_WS2812   1
 #define LIGHT_PROVIDER_RGB      2
 #define LIGHT_PROVIDER_RGBW     3
 #define LIGHT_PROVIDER_MY9192   4
+#define LIGHT_PROVIDER_RGB2W    5
 
 #define LIGHT_DEFAULT_COLOR     "#000080"
 #define LIGHT_SAVE_DELAY        5
+#define LIGHT_MAX_VALUE         255
 
 #define MY9291_DI_PIN           13
 #define MY9291_DCKI_PIN         15
@@ -229,7 +256,7 @@
 // -----------------------------------------------------------------------------
 
 #ifndef ENABLE_DOMOTICZ
-    #define ENABLE_DOMOTICZ     0
+    #define ENABLE_DOMOTICZ     1
 #endif
 #define DOMOTICZ_IN_TOPIC       "domoticz/in"
 #define DOMOTICZ_OUT_TOPIC      "domoticz/out"
@@ -238,7 +265,7 @@
 // NTP
 // -----------------------------------------------------------------------------
 
-#define NTP_SERVER              "ch.pool.ntp.org"
+#define NTP_SERVER              "pool.ntp.org"
 #define NTP_TIME_OFFSET         1
 #define NTP_DAY_LIGHT           true
 #define NTP_UPDATE_INTERVAL     1800
@@ -256,13 +283,3 @@
 // this device should be discoberable and respond to Alexa commands.
 // Both ENABLE_FAUXMO and fauxmoEnabled should be 1 for Alexa support to work.
 #define FAUXMO_ENABLED          1
-
-// -----------------------------------------------------------------------------
-// IOTAPPSTORY
-// -----------------------------------------------------------------------------
-
-#define IOTappStory1 "iotappstory.com"
-#define IOTappStoryPHP1 "/ota/esp8266-v1.php"
-#define IOTappStory2 "192.168.0.200"
-#define IOTappStoryPHP2 "/iotappstory/iotappstoryv20.php"
-

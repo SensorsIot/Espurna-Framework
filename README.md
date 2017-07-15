@@ -1,12 +1,10 @@
-This is a fork of Xose's Library. I just added IOTappStory compatibility.
-
 # ESPurna Firmware
 
 ESPurna ("spark" in Catalan) is a custom firmware for ESP8266 based smart switches.
 It was originally developed with the **[IteadStudio Sonoff](https://www.itead.cc/sonoff-wifi-wireless-switch.html)** in mind but now it supports a growing number of ESP8266-based boards.
 It uses the Arduino Core for ESP8266 framework and a number of 3rd party libraries.
 
-**Current Release Version is 1.6.9**, read the [changelog](https://bitbucket.org/xoseperez/espurna/src/master/CHANGELOG.md).
+**Current Release Version is 1.8.1**, read the [changelog](https://bitbucket.org/xoseperez/espurna/src/master/CHANGELOG.md).
 
 ## Features
 
@@ -42,8 +40,10 @@ It uses the Arduino Core for ESP8266 framework and a number of 3rd party librari
     * Relay switching and sensor data from the web interface
     * Websockets-based communication between the device and the browser
     * Backup and restore settings option
+    * Upgrade firmware from the web interface
 * **REST API** (enable/disable from web interface)
     * GET and PUT relay status
+    * Change light color (for supported hardware)
     * GET sensor data (power, current, voltage, temperature and humidity) depending on the available hardware
 * **RPC API** (enable/disable from web interface)
     * Remote reset the board
@@ -67,10 +67,14 @@ Here is the list of supported hardware. For more information please refer to the
 
 ||||
 |-|-|-|
+|![Tinkerman Espurna H](images/devices/tinkerman-espurna-h.jpg)|||
+|**Tinkerman ESPurna H**|||
 |![IteadStudio S20](images/devices/s20.jpg)|![WorkChoice EcoPlug](images/devices/workchoice-ecoplug.jpg)|![IteadStudio Sonoff Touch](images/devices/sonoff-touch.jpg)|
 |**IteadStudio S20**|**WorkChoice EcoPlug**|**IteadStudio Sonoff Touch**|
-|![IteadStudio Slampher](images/devices/slampher.jpg)|![AI-Thinker Wifi Light / Noduino OpenLight](images/devices/aithinker-ailight.jpg)||
-|**IteadStudio Slampher**|**AI-Thinker Wifi Light / Noduino OpenLight**||
+|![IteadStudio Slampher](images/devices/slampher.jpg)|![AI-Thinker Wifi Light / Noduino OpenLight](images/devices/aithinker-ailight.jpg)|![Magic Home LED Controller](images/devices/magic-home-led-controller.jpg)|
+|**IteadStudio Slampher**|**AI-Thinker Wifi Light / Noduino OpenLight**|**Magic Home LED Controller**|
+|![Huacanxing H801](images/devices/h801.jpg)|||
+|**Huacanxing H801**|||
 |![IteadStudio Sonoff Basic](images/devices/sonoff-basic.jpg)|![IteadStudio Sonoff RF](images/devices/sonoff-rf.jpg)|![Electrodragon Relay Board](images/devices/electrodragon-relay-board.jpg)|
 |**IteadStudio Sonoff Basic**|**IteadStudio Sonoff RF**|**Electrodragon Relay Board**|
 |![IteadStudio Sonoff Dual](images/devices/sonoff-dual.jpg)|![IteadStudio Sonoff POW](images/devices/sonoff-pow.jpg)|![IteadStudio Sonoff TH10/TH16](images/devices/sonoff-th10-th16.jpg)|

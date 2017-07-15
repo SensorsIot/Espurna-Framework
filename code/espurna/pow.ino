@@ -95,19 +95,27 @@ void powReset() {
 // -----------------------------------------------------------------------------
 
 unsigned int getActivePower() {
-    return hlw8012.getActivePower();
+    unsigned int power = hlw8012.getActivePower();
+    if (POW_MIN_POWER > power || power > POW_MAX_POWER) power = 0;
+    return power;
 }
 
 unsigned int getApparentPower() {
-    return hlw8012.getApparentPower();
+    unsigned int power = hlw8012.getApparentPower();
+    if (POW_MIN_POWER > power || power > POW_MAX_POWER) power = 0;
+    return power;
 }
 
 unsigned int getReactivePower() {
-    return hlw8012.getReactivePower();
+    unsigned int power = hlw8012.getReactivePower();
+    if (POW_MIN_POWER > power || power > POW_MAX_POWER) power = 0;
+    return power;
 }
 
 double getCurrent() {
-    return hlw8012.getCurrent();
+    double current = hlw8012.getCurrent();
+    if (POW_MIN_CURRENT > current || current > POW_MAX_CURRENT) current = 0;
+    return current;
 }
 
 unsigned int getVoltage() {
@@ -145,13 +153,13 @@ void powSetup() {
     powRetrieveCalibration();
 
     // API definitions
-    apiRegister("/api/power", "power", [](char * buffer, size_t len) {
+    apiRegister(POW_POWER_TOPIC, POW_POWER_TOPIC, [](char * buffer, size_t len) {
         snprintf(buffer, len, "%d", getActivePower());
     });
-    apiRegister("/api/current", "current", [](char * buffer, size_t len) {
+    apiRegister(POW_CURRENT_TOPIC, POW_CURRENT_TOPIC, [](char * buffer, size_t len) {
         dtostrf(getCurrent(), len-1, 2, buffer);
     });
-    apiRegister("/api/voltage", "voltage", [](char * buffer, size_t len) {
+    apiRegister(POW_VOLTAGE_TOPIC, POW_VOLTAGE_TOPIC, [](char * buffer, size_t len) {
         snprintf(buffer, len, "%d", getVoltage());
     });
 
@@ -162,9 +170,18 @@ void powLoop() {
     static unsigned long last_update = 0;
     static unsigned char report_count = POW_REPORT_EVERY;
 
+    static bool power_spike = false;
     static unsigned long power_sum = 0;
+    static unsigned long power_previous = 0;
+
+    static bool current_spike = false;
     static double current_sum = 0;
+    static double current_previous = 0;
+
+    static bool voltage_spike = false;
     static unsigned long voltage_sum = 0;
+    static unsigned long voltage_previous = 0;
+
     static bool powWasEnabled = false;
 
     // POW is disabled while there is no internet connection
@@ -189,9 +206,29 @@ void powLoop() {
         unsigned int factor = getPowerFactor();
         unsigned int reactive = getReactivePower();
 
-        power_sum += power;
-        current_sum += current;
-        voltage_sum += voltage;
+        if (power > 0) {
+            power_spike = (power_previous == 0);
+        } else if (power_spike) {
+            power_sum -= power_previous;
+            power_spike = false;
+        }
+        power_previous = power;
+
+        if (current > 0) {
+            current_spike = (current_previous == 0);
+        } else if (current_spike) {
+            current_sum -= current_previous;
+            current_spike = false;
+        }
+        current_previous = current;
+
+        if (voltage > 0) {
+            voltage_spike = (voltage_previous == 0);
+        } else if (voltage_spike) {
+            voltage_sum -= voltage_previous;
+            voltage_spike = false;
+        }
+        voltage_previous = voltage;
 
         DynamicJsonBuffer jsonBuffer;
         JsonObject& root = jsonBuffer.createObject();
@@ -254,6 +291,11 @@ void powLoop() {
             report_count = POW_REPORT_EVERY;
 
         }
+
+        // Post - Accumulators
+        power_sum += power_previous;
+        current_sum += current_previous;
+        voltage_sum += voltage_previous;
 
         // Toggle between current and voltage monitoring
         #if POW_USE_INTERRUPTS == 0

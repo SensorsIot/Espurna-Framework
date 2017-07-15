@@ -22,28 +22,7 @@
 // Development boards
 // -----------------------------------------------------------------------------
 
-#if defined(PIR_SENSOR)
-
-    #define MANUFACTURER        "SPIESS"
-    #define DEVICE              "WEMOS MINI"
-    #define BUTTON1_PIN         0
-    #define BUTTON1_RELAY       1
-    #define BUTTON1_LNGCLICK    BUTTON_MODE_PULSE
-    #define BUTTON1_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH
-    #define RELAY1_PIN          D6 //red
-    #define RELAY1_PIN_INVERSE  0
-    #define LED1_PIN            D7  //green
-    #define LED1_PIN_INVERSE    0
-    
-    #define BUTTON2_PIN         D5  
-    #define BUTTON2_MODE        BUTTON_SWITCH
-    #define BUTTON2_RELAY       1
-    #define RELAY1_LED          2
-    #define LED2_PIN            D2
-    #define LED2_PIN_INVERSE    0
-
-    
-#elif defined(NODEMCUV2)
+#if defined(NODEMCUV2)
 
     #define MANUFACTURER        "NODEMCU"
     #define DEVICE              "LOLIN"
@@ -62,8 +41,25 @@
     #define DEVICE              "D1_MINI"
     #define RELAY1_PIN          5
     #define RELAY1_PIN_INVERSE  0
-    #define LED1_PIN            2
+	#define LED1_PIN            2
     #define LED1_PIN_INVERSE    1
+
+// -----------------------------------------------------------------------------
+// ESPurna
+// -----------------------------------------------------------------------------
+
+#elif defined(ESPURNA_H)
+
+    #define MANUFACTURER        "TINKERMAN"
+    #define DEVICE              "ESPURNA_H"
+    #define RELAY1_PIN          12
+    #define RELAY1_PIN_INVERSE  1
+    #define LED1_PIN            5
+    #define LED1_PIN_INVERSE    0
+    #define BUTTON1_PIN         4
+    #define BUTTON1_RELAY       1
+    #define BUTTON1_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH
+    #define ENABLE_POW          1
 
 // -----------------------------------------------------------------------------
 // Itead Studio boards
@@ -269,8 +265,8 @@
 
 #elif defined(AI_LIGHT)
 
-    #define MANUFACTURER        "AI THINKER"
-    #define DEVICE              "AI LIGHT"
+    #define MANUFACTURER        "AI_THINKER"
+    #define DEVICE              "AI_LIGHT"
     #define RELAY_PROVIDER      RELAY_PROVIDER_LIGHT
     #define LIGHT_PROVIDER      LIGHT_PROVIDER_MY9192
 
@@ -280,12 +276,50 @@
 
 #elif defined(LED_CONTROLLER)
 
-    #define MANUFACTURER        "MAGIC HOME"
-    #define DEVICE              "LED CONTROLLER"
+    #define MANUFACTURER        "MAGIC_HOME"
+    #define DEVICE              "LED_CONTROLLER"
     #define LED1_PIN            2
     #define LED1_PIN_INVERSE    1
     #define RELAY_PROVIDER      RELAY_PROVIDER_LIGHT
     #define LIGHT_PROVIDER      LIGHT_PROVIDER_RGB
+
+    #undef RGBW_INVERSE_LOGIC
+    #undef RGBW_RED_PIN
+    #undef RGBW_GREEN_PIN
+    #undef RGBW_BLUE_PIN
+    #undef RGBW_WHITE_PIN
+
+    #define RGBW_INVERSE_LOGIC      1
+    #define RGBW_RED_PIN            14
+    #define RGBW_GREEN_PIN          5
+    #define RGBW_BLUE_PIN           12
+    #define RGBW_WHITE_PIN          13
+
+// -----------------------------------------------------------------------------
+// HUACANXING H801
+// -----------------------------------------------------------------------------
+
+#elif defined(H801_LED_CONTROLLER)
+
+    #define MANUFACTURER        "HUACANXING"
+    #define DEVICE              "H801"
+    #define LED1_PIN            5
+    #define LED1_PIN_INVERSE    1
+    #define RELAY_PROVIDER      RELAY_PROVIDER_LIGHT
+    #define LIGHT_PROVIDER      LIGHT_PROVIDER_RGB2W
+
+    #undef RGBW_INVERSE_LOGIC
+    #undef RGBW_RED_PIN
+    #undef RGBW_GREEN_PIN
+    #undef RGBW_BLUE_PIN
+    #undef RGBW_WHITE_PIN
+
+    #define RGBW_INVERSE_LOGIC      1
+    #define RGBW_RED_PIN            15
+    #define RGBW_GREEN_PIN          13
+    #define RGBW_BLUE_PIN           12
+    #define RGBW_WHITE_PIN          14
+    #define RGBW_WHITE2_PIN         4
 
 // -----------------------------------------------------------------------------
 // Jan Goedeke Wifi Relay
@@ -347,6 +381,7 @@
     #define DEVICE              "MQTT_RELAY"
     #define BUTTON1_PIN         0
     #define BUTTON1_RELAY       1
+    #define BUTTON1_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH
     #define RELAY1_PIN          12
     #define RELAY1_PIN_INVERSE  0
     #define LED1_PIN            16
