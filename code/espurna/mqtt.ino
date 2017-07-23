@@ -78,6 +78,12 @@ void mqttSendRaw(const char * topic, const char * message) {
             mqtt.publish(topic, message, MQTT_RETAIN);
         #endif
     }
+    else
+    {
+      char * host = strdup(getSetting("mqttServer", MQTT_SERVER).c_str());
+      unsigned int port = getSetting("mqttPort", MQTT_PORT).toInt();
+      DEBUG_MSG_P(PSTR("[MQTT] send failed. MQTT %s:$s not connected\n"),host , port);
+    }
 }
 
 void mqttSend(const char * topic, const char * message) {
