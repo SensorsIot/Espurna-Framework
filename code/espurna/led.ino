@@ -50,7 +50,9 @@ void showStatus() {
         if (WiFi.getMode() == WIFI_AP) {
             ledBlink(WIFI_LED - 1, 2500, 2500);
         } else {
+          #if WIFI_CONNECTED_BLINK == 1
             ledBlink(WIFI_LED - 1, 4900, 100);
+          #endif
         }
     } else {
         ledBlink(WIFI_LED - 1, 500, 500);

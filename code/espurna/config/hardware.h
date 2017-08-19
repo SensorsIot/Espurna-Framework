@@ -17,7 +17,7 @@
 // LED#_PIN: GPIO for the n-th LED (1-based, up to 4 LEDs)
 // LED#_PIN_INVERSE: LED has inversed logic (lit when pulled down)
 // WIFI_LED: LED number that will used for WIFI notifications (1-based, defaults to 1)
-
+// WIFI_CONNECTED_BLINK : if = 0 then LED will not blink while connected to router (defauls to 1)
 // -----------------------------------------------------------------------------
 // Development boards
 // -----------------------------------------------------------------------------
@@ -492,6 +492,7 @@
 
 #ifndef WIFI_LED
 #define WIFI_LED            1
+#define WIFI_CONNECTED_BLINK  0
 #endif
 
 // Needed for ESP8285 boards under Windows using PlatformIO (?)

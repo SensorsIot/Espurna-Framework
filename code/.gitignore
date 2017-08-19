@@ -2,3 +2,4 @@
 .gcc-flags.json
 .pioenvs
 .piolibdeps
+platformio.ini
