@@ -86,3 +86,5 @@ HOSTNAME:SONOFF_TOUCH_85B0E4
 
 #LED control
 /21stHome/switch/SONOFF_TOUCH_04750D/led/0 -m 1
+
+/Users/pedroalbuquerque/Downloads/xoseperez-rfm69gw-2e0cfd784dbf/esp8266

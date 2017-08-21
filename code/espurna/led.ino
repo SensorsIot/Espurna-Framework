@@ -52,6 +52,8 @@ void showStatus() {
         } else {
           #if WIFI_CONNECTED_BLINK == 1
             ledBlink(WIFI_LED - 1, 4900, 100);
+          #else
+            digitalWrite(WIFI_LED,HIGH);
           #endif
         }
     } else {
