@@ -55,6 +55,7 @@ void showStatus() {
           #else
             digitalWrite(WIFI_LED,HIGH);
           #endif
+
         }
     } else {
         ledBlink(WIFI_LED - 1, 500, 500);
