@@ -115,6 +115,11 @@ void wifiStatus() {
 }
 
 void wifiSetup() {
+
+    WiFi.persistent(false);
+    #ifdef SONOFF_TOUCH
+          WiFi.setOutputPower(20.5);
+    #endif
     wifiConfigure();
 
     // Message callbacks

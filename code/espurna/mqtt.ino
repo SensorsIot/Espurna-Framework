@@ -47,6 +47,7 @@ void buildTopics() {
     // Replace identifier
     mqttTopic = getSetting("mqttTopic", MQTT_TOPIC);
     mqttTopic.replace("{identifier}", getSetting("hostname"));
+    if (!mqttTopic.endsWith("/")) mqttTopic = mqttTopic + "/";
 }
 
 bool mqttForward() {
@@ -77,6 +78,12 @@ void mqttSendRaw(const char * topic, const char * message) {
             mqtt.publish(topic, message, MQTT_RETAIN);
         #endif
     }
+    else
+    {
+      char * host = strdup(getSetting("mqttServer", MQTT_SERVER).c_str());
+      unsigned int port = getSetting("mqttPort", MQTT_PORT).toInt();
+      DEBUG_MSG_P(PSTR("[MQTT] send failed. MQTT %s:$s not connected\n"),host , port);
+    }
 }
 
 void mqttSend(const char * topic, const char * message) {
@@ -87,7 +94,7 @@ void mqttSend(const char * topic, const char * message) {
 
 void mqttSend(const char * topic, unsigned int index, const char * message) {
     String mqttGetter = getSetting("mqttGetter", MQTT_USE_GETTER);
-    String path = mqttTopic + String(topic) + String ("/") + String(index) + mqttGetter;
+    String path = mqttTopic + String(topic) + String ("/") + String(index) + mqttGetter;;
     mqttSendRaw(path.c_str(), message);
 }
 
@@ -177,9 +184,11 @@ void _mqttOnMessage(char* topic, char* payload, unsigned int len) {
 }
 
 void mqttConnect() {
+
     if (!mqtt.connected()) {
 
         if (getSetting("mqttServer", MQTT_SERVER).length() == 0) return;
+
         // Last option: reconnect to wifi after MQTT_MAX_TRIES attemps in a row
         #if MQTT_MAX_TRIES > 0
             static unsigned int tries = 0;
@@ -198,6 +207,7 @@ void mqttConnect() {
         #endif
 
         mqtt.disconnect();
+
         if (_mqttUser) free(_mqttUser);
         if (_mqttPass) free(_mqttPass);
 
@@ -205,27 +215,32 @@ void mqttConnect() {
         unsigned int port = getSetting("mqttPort", MQTT_PORT).toInt();
         _mqttUser = strdup(getSetting("mqttUser").c_str());
         _mqttPass = strdup(getSetting("mqttPassword").c_str());
+        char * will = strdup((mqttTopic + MQTT_TOPIC_STATUS).c_str());
 
         DEBUG_MSG_P(PSTR("[MQTT] Connecting to broker at %s:%d"), host, port);
         mqtt.setServer(host, port);
+
         #if MQTT_USE_ASYNC
+
             mqtt.setKeepAlive(MQTT_KEEPALIVE).setCleanSession(false);
-      	    mqtt.setWill((mqttTopic + MQTT_TOPIC_STATUS).c_str(), MQTT_QOS, MQTT_RETAIN, "0");
+            mqtt.setWill(will, MQTT_QOS, MQTT_RETAIN, "0");
             if ((strlen(_mqttUser) > 0) && (strlen(_mqttPass) > 0)) {
                 DEBUG_MSG_P(PSTR(" as user '%s'."), _mqttUser);
                 mqtt.setCredentials(_mqttUser, _mqttPass);
             }
             DEBUG_MSG_P(PSTR("\n"));
             mqtt.connect();
+
         #else
+
             bool response;
 
             if ((strlen(_mqttUser) > 0) && (strlen(_mqttPass) > 0)) {
                 DEBUG_MSG_P(PSTR(" as user '%s'\n"), _mqttUser);
-                response = mqtt.connect(getIdentifier().c_str(), _mqttUser, _mqttPass, (mqttTopic + MQTT_TOPIC_STATUS).c_str(), MQTT_QOS, MQTT_RETAIN, "0");
+                response = mqtt.connect(getIdentifier().c_str(), _mqttUser, _mqttPass, will, MQTT_QOS, MQTT_RETAIN, "0");
             } else {
                 DEBUG_MSG_P(PSTR("\n"));
-                response = mqtt.connect(getIdentifier().c_str(), (mqttTopic + MQTT_TOPIC_STATUS).c_str(), MQTT_QOS, MQTT_RETAIN, "0");
+				response = mqtt.connect(getIdentifier().c_str(), will, MQTT_QOS, MQTT_RETAIN, "0");
             }
 
             if (response) {
@@ -236,13 +251,16 @@ void mqttConnect() {
             }
 
         #endif
+
         free(host);
+        free(will);
 
         String mqttSetter = getSetting("mqttSetter", MQTT_USE_SETTER);
         String mqttGetter = getSetting("mqttGetter", MQTT_USE_GETTER);
-        bool _mqttForward = !mqttGetter.equals(mqttSetter);
+        _mqttForward = !mqttGetter.equals(mqttSetter);
 
     }
+
 }
 
 void mqttSetup() {

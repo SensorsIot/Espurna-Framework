@@ -1,5 +1,5 @@
 /*
-
+xoseperez
 ESPurna
 
 Copyright (C) 2016-2017 by Xose Pérez <xose dot perez at gmail dot com>
@@ -69,6 +69,9 @@ void heartbeat() {
     #if (MQTT_REPORT_MAC)
         mqttSend(MQTT_TOPIC_MAC, WiFi.macAddress().c_str());
     #endif
+    #if (MQTT_REPORT_RSSI)
+        mqttSend(MQTT_TOPIC_RSSI, String(WiFi.RSSI()).c_str());
+    #endif
     #if (MQTT_REPORT_UPTIME)
         mqttSend(MQTT_TOPIC_UPTIME, String(uptime_seconds).c_str());
     #endif
@@ -77,6 +80,11 @@ void heartbeat() {
     #endif
     #if (MQTT_REPORT_RELAY)
         relayMQTT();
+    #endif
+    #if LIGHT_PROVIDER != LIGHT_PROVIDER_NONE
+    #if (MQTT_REPORT_COLOR)
+        mqttSend(MQTT_TOPIC_COLOR, lightColor().c_str());
+    #endif
     #endif
     #if (MQTT_REPORT_VCC)
     #if ENABLE_ADC_VCC
@@ -91,7 +99,12 @@ void heartbeat() {
 
 void hardwareSetup() {
     EEPROM.begin(4096);
-    Serial.begin(SERIAL_BAUDRATE);
+    #ifdef DEBUG_PORT
+        DEBUG_PORT.begin(SERIAL_BAUDRATE);
+    #endif
+    #if SONOFF_DUAL
+        Serial.begin(SERIAL_BAUDRATE);
+    #endif
     #if not EMBEDDED_WEB
         SPIFFS.begin();
     #endif
@@ -119,7 +132,8 @@ void welcome() {
     DEBUG_MSG_P(PSTR("ChipID: %06X\n"), ESP.getChipId());
     DEBUG_MSG_P(PSTR("CPU frequency: %d MHz\n"), ESP.getCpuFreqMHz());
     DEBUG_MSG_P(PSTR("Last reset reason: %s\n"), (char *) ESP.getResetReason().c_str());
-    DEBUG_MSG_P(PSTR("Memory size: %d bytes\n"), ESP.getFlashChipSize());
+    DEBUG_MSG_P(PSTR("Memory size (SDK): %d bytes\n"), ESP.getFlashChipSize());
+    DEBUG_MSG_P(PSTR("Memory size (CHIP): %d bytes\n"), ESP.getFlashChipRealSize());
     DEBUG_MSG_P(PSTR("Free heap: %d bytes\n"), ESP.getFreeHeap());
     DEBUG_MSG_P(PSTR("Firmware size: %d bytes\n"), ESP.getSketchSize());
     DEBUG_MSG_P(PSTR("Free firmware space: %d bytes\n"), ESP.getFreeSketchSpace());
@@ -144,11 +158,13 @@ void setup() {
 
     hardwareSetup();
     welcome();
+
     settingsSetup();
     if (getSetting("hostname").length() == 0) {
         setSetting("hostname", getIdentifier());
         saveSettings();
     }
+
     webSetup();
     #if LIGHT_PROVIDER != LIGHT_PROVIDER_NONE
         lightSetup();
@@ -156,8 +172,11 @@ void setup() {
     relaySetup();
     buttonSetup();
     ledSetup();
+
+    delay(500);
+
     wifiSetup();
- //   otaSetup();
+    otaSetup();
     mqttSetup();
     ntpSetup();
 
@@ -170,14 +189,14 @@ void setup() {
     #if ENABLE_NOFUSS
         nofussSetup();
     #endif
-    #if ENABLE_IOTAPPSTORY
-         IOTappStory();
-    #endif
     #if ENABLE_POW
         powSetup();
     #endif
     #if ENABLE_DS18B20
         dsSetup();
+    #endif
+    #if ENABLE_ANALOG
+        analogSetup();
     #endif
     #if ENABLE_DHT
         dhtSetup();
@@ -189,12 +208,16 @@ void setup() {
         powerMonitorSetup();
     #endif
 
+    // Prepare configuration for version 2.0
+    hwUpwardsCompatibility();
+
 }
 
 void loop() {
 
     hardwareLoop();
     buttonLoop();
+    relayLoop();
     ledLoop();
     wifiLoop();
     otaLoop();
@@ -215,6 +238,9 @@ void loop() {
     #endif
     #if ENABLE_DS18B20
         dsLoop();
+    #endif
+    #if ENABLE_ANALOG
+        analogLoop();
     #endif
     #if ENABLE_DHT
         dhtLoop();

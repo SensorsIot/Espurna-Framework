@@ -17,33 +17,12 @@
 // LED#_PIN: GPIO for the n-th LED (1-based, up to 4 LEDs)
 // LED#_PIN_INVERSE: LED has inversed logic (lit when pulled down)
 // WIFI_LED: LED number that will used for WIFI notifications (1-based, defaults to 1)
-
+// WIFI_CONNECTED_BLINK : if = 0 then LED will not blink while connected to router (defauls to 1)
 // -----------------------------------------------------------------------------
 // Development boards
 // -----------------------------------------------------------------------------
 
-#if defined(PIR_SENSOR)
-
-    #define MANUFACTURER        "SPIESS"
-    #define DEVICE              "WEMOS MINI"
-    #define BUTTON1_PIN         0
-    #define BUTTON1_RELAY       1
-    #define BUTTON1_LNGCLICK    BUTTON_MODE_PULSE
-    #define BUTTON1_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH
-    #define RELAY1_PIN          D6 //red
-    #define RELAY1_PIN_INVERSE  0
-    #define LED1_PIN            D7  //green
-    #define LED1_PIN_INVERSE    0
-    
-    #define BUTTON2_PIN         D5  
-    #define BUTTON2_MODE        BUTTON_SWITCH
-    #define BUTTON2_RELAY       1
-    #define RELAY1_LED          2
-    #define LED2_PIN            D2
-    #define LED2_PIN_INVERSE    0
-
-    
-#elif defined(NODEMCUV2)
+#if defined(NODEMCUV2)
 
     #define MANUFACTURER        "NODEMCU"
     #define DEVICE              "LOLIN"
@@ -62,8 +41,25 @@
     #define DEVICE              "D1_MINI"
     #define RELAY1_PIN          5
     #define RELAY1_PIN_INVERSE  0
-    #define LED1_PIN            2
+	#define LED1_PIN            2
     #define LED1_PIN_INVERSE    1
+
+// -----------------------------------------------------------------------------
+// ESPurna
+// -----------------------------------------------------------------------------
+
+#elif defined(ESPURNA_H)
+
+    #define MANUFACTURER        "TINKERMAN"
+    #define DEVICE              "ESPURNA_H"
+    #define RELAY1_PIN          12
+    #define RELAY1_PIN_INVERSE  1
+    #define LED1_PIN            5
+    #define LED1_PIN_INVERSE    0
+    #define BUTTON1_PIN         4
+    #define BUTTON1_RELAY       1
+    #define BUTTON1_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH
+    #define ENABLE_POW          1
 
 // -----------------------------------------------------------------------------
 // Itead Studio boards
@@ -269,8 +265,8 @@
 
 #elif defined(AI_LIGHT)
 
-    #define MANUFACTURER        "AI THINKER"
-    #define DEVICE              "AI LIGHT"
+    #define MANUFACTURER        "AI_THINKER"
+    #define DEVICE              "AI_LIGHT"
     #define RELAY_PROVIDER      RELAY_PROVIDER_LIGHT
     #define LIGHT_PROVIDER      LIGHT_PROVIDER_MY9192
 
@@ -280,12 +276,50 @@
 
 #elif defined(LED_CONTROLLER)
 
-    #define MANUFACTURER        "MAGIC HOME"
-    #define DEVICE              "LED CONTROLLER"
+    #define MANUFACTURER        "MAGIC_HOME"
+    #define DEVICE              "LED_CONTROLLER"
     #define LED1_PIN            2
     #define LED1_PIN_INVERSE    1
     #define RELAY_PROVIDER      RELAY_PROVIDER_LIGHT
     #define LIGHT_PROVIDER      LIGHT_PROVIDER_RGB
+
+    #undef RGBW_INVERSE_LOGIC
+    #undef RGBW_RED_PIN
+    #undef RGBW_GREEN_PIN
+    #undef RGBW_BLUE_PIN
+    #undef RGBW_WHITE_PIN
+
+    #define RGBW_INVERSE_LOGIC      1
+    #define RGBW_RED_PIN            14
+    #define RGBW_GREEN_PIN          5
+    #define RGBW_BLUE_PIN           12
+    #define RGBW_WHITE_PIN          13
+
+// -----------------------------------------------------------------------------
+// HUACANXING H801
+// -----------------------------------------------------------------------------
+
+#elif defined(H801_LED_CONTROLLER)
+
+    #define MANUFACTURER        "HUACANXING"
+    #define DEVICE              "H801"
+    #define LED1_PIN            5
+    #define LED1_PIN_INVERSE    1
+    #define RELAY_PROVIDER      RELAY_PROVIDER_LIGHT
+    #define LIGHT_PROVIDER      LIGHT_PROVIDER_RGB2W
+
+    #undef RGBW_INVERSE_LOGIC
+    #undef RGBW_RED_PIN
+    #undef RGBW_GREEN_PIN
+    #undef RGBW_BLUE_PIN
+    #undef RGBW_WHITE_PIN
+
+    #define RGBW_INVERSE_LOGIC      1
+    #define RGBW_RED_PIN            15
+    #define RGBW_GREEN_PIN          13
+    #define RGBW_BLUE_PIN           12
+    #define RGBW_WHITE_PIN          14
+    #define RGBW_WHITE2_PIN         4
 
 // -----------------------------------------------------------------------------
 // Jan Goedeke Wifi Relay
@@ -347,6 +381,7 @@
     #define DEVICE              "MQTT_RELAY"
     #define BUTTON1_PIN         0
     #define BUTTON1_RELAY       1
+    #define BUTTON1_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH
     #define RELAY1_PIN          12
     #define RELAY1_PIN_INVERSE  0
     #define LED1_PIN            16
@@ -391,7 +426,7 @@
 #endif
 
 #ifndef BUTTON1_DBLCLICK
-#define BUTTON1_DBLCLICK    BUTTON_MODE_AP
+#define BUTTON1_DBLCLICK    BUTTON_MODE_NONE    //BUTTON_MODE_AP
 #endif
 #ifndef BUTTON2_DBLCLICK
 #define BUTTON2_DBLCLICK    BUTTON_MODE_NONE
@@ -417,7 +452,7 @@
 #endif
 
 #ifndef BUTTON1_LNGLNGCLICK
-#define BUTTON1_LNGLNGCLICK BUTTON_MODE_FACTORY
+#define BUTTON1_LNGLNGCLICK BUTTON_MODE_NONE    // BUTTON_MODE_FACTORY
 #endif
 #ifndef BUTTON2_LNGLNGCLICK
 #define BUTTON2_LNGLNGCLICK BUTTON_MODE_NONE
@@ -457,6 +492,7 @@
 
 #ifndef WIFI_LED
 #define WIFI_LED            1
+#define WIFI_CONNECTED_BLINK  0
 #endif
 
 // Needed for ESP8285 boards under Windows using PlatformIO (?)

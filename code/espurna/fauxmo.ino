@@ -16,16 +16,6 @@ fauxmoESP fauxmo;
 // FAUXMO
 // -----------------------------------------------------------------------------
 
-
-
-#ifdef MQTT_TOPIC_ALEXA
-void alexaMQTT(uint8_t event) {
-    char payload[2];
-    sprintf(payload, "%d", event);
-    mqttSend(MQTT_TOPIC_ALEXA, 1, payload);
-}
-#endif
-
 void fauxmoConfigure() {
     fauxmo.enable(getSetting("fauxmoEnabled", FAUXMO_ENABLED).toInt() == 1);
 }
@@ -42,10 +32,7 @@ void fauxmoSetup() {
         }
     }
     fauxmo.onMessage([relays](unsigned char device_id, const char * name, bool state) {
-       DEBUG_MSG_P(PSTR("[FAUXMO] %s state: %s\n"), name, state ? "ON" : "OFF");
-       #ifdef MQTT_TOPIC_ALEXA
-          alexaMQTT(state);
-       #endif
+        DEBUG_MSG_P(PSTR("[FAUXMO] %s state: %s\n"), name, state ? "ON" : "OFF");
         relayStatus(device_id, state);
     });
 }

@@ -30,6 +30,18 @@ void buttonMQTT(unsigned char id, uint8_t event) {
 }
 #endif
 
+int buttonFromRelay(unsigned int relayID) {
+    for (unsigned int i=0; i < _buttons.size(); i++) {
+        if (_buttons[i].relayID == relayID) return i;
+    }
+    return -1;
+}
+
+bool buttonState(unsigned char id) {
+    if (id >= _buttons.size()) return false;
+    return _buttons[id].button->pressed();
+}
+
 unsigned char buttonAction(unsigned char id, unsigned char event) {
     if (id >= _buttons.size()) return BUTTON_MODE_NONE;
     unsigned long actions = _buttons[id].actions;
@@ -96,8 +108,8 @@ void buttonSetup() {
     #ifdef SONOFF_DUAL
 
         unsigned int actions = buttonStore(BUTTON_MODE_NONE, BUTTON_MODE_TOGGLE, BUTTON_MODE_NONE, BUTTON_MODE_NONE, BUTTON_MODE_NONE);
-        _buttons.push_back({new DebounceEvent(0, BUTTON_PUSHBUTTON), 0, 1});
-        _buttons.push_back({new DebounceEvent(0, BUTTON_PUSHBUTTON), 0, 2});
+        _buttons.push_back({new DebounceEvent(0, BUTTON_PUSHBUTTON), actions, 1});
+        _buttons.push_back({new DebounceEvent(0, BUTTON_PUSHBUTTON), actions, 2});
         _buttons.push_back({new DebounceEvent(0, BUTTON_PUSHBUTTON), actions, BUTTON3_RELAY});
 
     #else
@@ -164,7 +176,7 @@ void buttonLoop() {
 
                             bool status = (value & (1 << i)) > 0;
 
-                            // Cjeck if the status for that relay has changed
+                            // Check if the status for that relay has changed
                             if (relayStatus(i) != status) {
                                 buttonEvent(i, BUTTON_EVENT_CLICK);
                                 break;
